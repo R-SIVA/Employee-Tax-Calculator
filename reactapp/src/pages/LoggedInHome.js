@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { UserContext } from '../components/UserContext';
 const LoggedInHome = () => {
+
+  const {setLoggedIn}=useContext(UserContext);
   const navigate = useNavigate();
   function handleCalculate(){
     navigate('/Emp');
@@ -17,7 +19,10 @@ const LoggedInHome = () => {
       {/* Top-right buttons */}
       <div className="absolute top-4 right-4 space-x-4">
         <button
-          onClick={() => navigate('/')}
+          onClick={() => {
+            navigate("/");
+            setLoggedIn(false);
+          }}
           className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
         >
           Log Out

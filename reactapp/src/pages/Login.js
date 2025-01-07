@@ -4,6 +4,7 @@ import { UserContext } from '../components/UserContext';
 
 const Login = () => {
   const { user } = useContext(UserContext);
+  const {setLoggedIn} = useContext(UserContext);
   const navigate = useNavigate();
   const [formdata, setFormdata] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
@@ -20,6 +21,7 @@ const Login = () => {
       user.username === formdata.username &&
       user.password === formdata.password
     ) {
+      setLoggedIn(true);
       navigate('/loggedinhome');
     } else {
       setError('Invalid credentials');

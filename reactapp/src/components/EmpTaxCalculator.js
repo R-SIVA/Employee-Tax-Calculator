@@ -61,7 +61,7 @@ const EmpTaxCalculator = () => {
 
       <div className="mb-4">
         <label htmlFor="taxRate" className="block text-sm font-medium text-gray-700 mb-1">
-          Tax Rate (%):
+          Tax Rate:
         </label>
         <input
           id="taxRate"
