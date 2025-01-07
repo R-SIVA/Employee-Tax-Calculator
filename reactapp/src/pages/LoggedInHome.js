@@ -25,14 +25,11 @@ const LoggedInHome = () => {
         
       </div>
 
-      {/* Main content */}
       <div className="flex flex-col items-center justify-center min-h-screen bg-black bg-opacity-50 text-white">
         <h1 className="text-4xl font-bold mb-6 text-center">
         Employee Tax Management
         </h1>
         
-
-        {/* Boxes */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl">
           <div className="bg-white text-black p-6 rounded-lg shadow-md hover:shadow-lg transition duration-200">
             <h2 className="text-xl font-bold mb-4">Visit Tax Details</h2>
@@ -46,18 +43,11 @@ const LoggedInHome = () => {
             <h2 className="text-xl font-bold mb-4">Credits</h2>
             <p>Learn about tax credits that can directly reduce the taxes you owe.</p>
           </div>
-          <div className="bg-white text-black p-6 rounded-lg shadow-md hover:shadow-lg transition duration-200">
-            <h2 className="text-xl font-bold mb-4">Tax Payments</h2>
-            <p>Make your tax payments seamlessly and keep track of your history.</p>
-          </div>
           <div onClick={handleCalculate}className="bg-white text-black p-6 rounded-lg shadow-md hover:shadow-lg transition duration-200">
             <h2 className="text-xl font-bold mb-4">Tax Calculator</h2>
             <p>Use our tax calculator to estimate your tax obligations instantly.</p>
           </div>
-          <div className="bg-white text-black p-6 rounded-lg shadow-md hover:shadow-lg transition duration-200">
-            <h2 className="text-xl font-bold mb-4">Support</h2>
-            <p>Get expert support for all your tax-related questions and concerns.</p>
-          </div>
+          
         </div>
       </div>
     </div>
