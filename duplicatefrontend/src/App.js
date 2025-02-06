@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import EmpTaxCalculatorPage from './pages/EmpTaxCalculatorPage';
+import {Route,Routes} from 'react-router-dom';
+import Registration from './pages/Registration';
+import Login from './pages/Login';
+import Home from './pages/Home';
+import LoggedInHome from './pages/LoggedInHome';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+
+      <Routes>
+      <Route path="/" element={<Home/>}></Route>
+      <Route path="/loggedinhome" element={<ProtectedRoute><LoggedInHome/></ProtectedRoute>}></Route>
+        <Route path="/registration" element={<Registration/>}></Route>
+        <Route path="/login" element={<Login/>}></Route>
+        <Route path="/Emp" element={<ProtectedRoute><EmpTaxCalculatorPage/></ProtectedRoute>}></Route>
+      </Routes>
+
     </div>
   );
-}
+};
 
 export default App;

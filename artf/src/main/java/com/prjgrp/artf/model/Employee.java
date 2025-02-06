@@ -19,6 +19,5 @@ public class Employee {
     private String name;
     private String department;
     private String email;
-    private Double salary; // Added an additional relevant field
-    // Other relevant fields
+    private Double salary; 
 }

@@ -17,9 +17,7 @@ public class Payroll {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long employeeId; // Foreign Key reference as a simple field
+    private Long employeeId; 
     private Double monthlySalary;
     private Double bonus;
-
-    // Other relevant fields or methods (e.g., tax calculations, gross salary, etc.)
 }
