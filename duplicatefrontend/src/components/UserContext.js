@@ -12,7 +12,7 @@ export const UserProvider=({children})=>{
     });
     useEffect(()=>{
         if (user){
-            const username=user.username;
+            const username={username:user.username};
             localStorage.setItem("user",JSON.stringify(username));
         }
         else{

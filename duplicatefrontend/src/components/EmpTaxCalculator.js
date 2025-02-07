@@ -1,42 +1,90 @@
-import React, { useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 const EmpTaxCalculator = () => {
-  const [salary, setSalary] = useState('');
-  const [taxRate, setTaxRate] = useState('');
+  const [basicsalary, setBasicSalary] = useState('');
+  const [allowance, setAllowance] = useState('');
   const [tax, setTax] = useState(null);
   const [error, setError] = useState('');
+  const [salarydetail,setSalarydetail]=useState({});
+  const formData={
+    basicsalary:basicsalary,
+    allowance:allowance
+  };
 
-  const handleSalaryChange = (e) => setSalary(e.target.value);
-  const handleTaxRateChange = (e) => setTaxRate(e.target.value);
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  const handleCalculateClick = () => {
-    // Reset error
+  const handleSalaryChange = (e) => setBasicSalary(e.target.value);
+  const handleTaxRateChange = (e) => setAllowance(e.target.value);
+
+  useEffect(() => {
+    console.log(user.username);
+    axios.get(`http://localhost:8080/salary/${user.username}`)
+    .then((res) => {
+       const salaryda=res.data
+       if(salaryda){
+       setSalarydetail(salaryda);
+       setBasicSalary(salaryda.basicsalary);
+       setAllowance(salaryda.allowance);
+       }
+    })
+    .catch((error)=>window.alert("There was a problem in access salary details!"));
+  }, []);
+
+console.log(salarydetail);
+
+  const handleAddSalary=()=>{
     setError('');
 
-    // Validate input values
-    if (!salary || !taxRate) {
+    if (!basicsalary || !allowance) {
       setError('Please fill all fields');
       return;
     }
-
-    const salaryValue = parseFloat(salary);
-    const taxRateValue = parseFloat(taxRate);
-
     if (
-      isNaN(salaryValue) ||
-      salaryValue <= 0 ||
-      isNaN(taxRateValue) ||
-      taxRateValue <= 0 ||
-      taxRateValue > 100
+      isNaN(basicsalary) ||
+      basicsalary<= 0 ||
+      isNaN(allowance) ||
+      allowance <= 0 
     ) {
       setError('Invalid input values');
       return;
     }
+    axios.post(`http://localhost:8080/salary/${user.username}`, formData)
+    .then((response => {
+        alert("salary added succesfully!")
+    }))
+    .catch((error)=>window.alert("There was a problem in salary!"));
 
-    const calculatedTax = (salaryValue * taxRateValue) / 100;
+
+  };
+  const handleUpdateSalary=()=>{
+
+
+  };
+
+  const handleCalculateClick = () => {
+    // setError('');
+    // if (!basicsalary || !allowance) {
+    //   setError('Please fill all fields');
+    //   return;
+    // }
+
+    const salaryValue = parseFloat(basicsalary);
+    const allowanceValue = parseFloat(allowance);
+
+    // if (
+    //   isNaN(salaryValue) ||
+    //   salaryValue <= 0 ||
+    //   isNaN(allowanceValue) ||
+    //   allowanceValue <= 0 
+    // ) {
+    //   setError('Invalid input values');
+    //   return;
+    // }
+    //console.log(user);
+    
+    const calculatedTax = (salaryValue + allowanceValue)* 15 / 100;
     setTax(calculatedTax);
-    setSalary('');
-    setTaxRate('');
+    
   };
 
   return (
@@ -47,32 +95,45 @@ const EmpTaxCalculator = () => {
 
       <div className="mb-4">
         <label htmlFor="salary" className="block text-sm font-medium text-gray-700 mb-1">
-          Salary:
+          Basic Salary:
         </label>
         <input
           id="salary"
           type="number"
-          value={salary}
+          value={basicsalary}
           onChange={handleSalaryChange}
-          placeholder="Enter salary"
+          placeholder="Enter basic salary"
           className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       <div className="mb-4">
         <label htmlFor="taxRate" className="block text-sm font-medium text-gray-700 mb-1">
-          Tax Rate:
+        Allowance:
         </label>
         <input
           id="taxRate"
           type="number"
-          value={taxRate}
+          value={allowance}
           onChange={handleTaxRateChange}
-          placeholder="Enter tax rate"
+          placeholder="Enter allowance"
           className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
-
+<div className='flex-wrap mb-4'>
+      <button
+        onClick={handleAddSalary}
+        className="w-auto mr-2 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
+      >
+        Add Salary Details
+      </button>
+      <button
+        onClick={handleUpdateSalary}
+        className="w-auto m-2 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
+      >
+        Update Salary Details
+      </button>
+      </div>
       <button
         onClick={handleCalculateClick}
         className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
