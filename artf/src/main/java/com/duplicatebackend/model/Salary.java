@@ -14,10 +14,7 @@ public class Salary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-   
-
     //@ManyToOne // Many salary records can belong to one employee
-    // @JoinColumn(name = "employee_id", nullable = false)
     @OneToOne(cascade = CascadeType.ALL)
     private Employee employee;
     private Double basicsalary;

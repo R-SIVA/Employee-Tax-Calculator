@@ -30,7 +30,7 @@ const EmpTaxCalculator = () => {
     .catch((error)=>window.alert("There was a problem in access salary details!"));
   }, []);
 
-console.log(salarydetail);
+ console.log(salarydetail);
 
   const handleAddSalary=()=>{
     setError('');
@@ -52,36 +52,38 @@ console.log(salarydetail);
     .then((response => {
         alert("salary added succesfully!")
     }))
-    .catch((error)=>window.alert("There was a problem in salary!"));
-
+    .catch((error)=>window.alert("There was a problem in add the salary!"));
 
   };
+
+
   const handleUpdateSalary=()=>{
 
-
+    setError('');
+    if (!basicsalary || !allowance) {
+      setError('Please fill all fields');
+      return;
+    }
+    if (
+      isNaN(basicsalary) ||
+      basicsalary<= 0 ||
+      isNaN(allowance) ||
+      allowance <= 0 
+    ) {
+      setError('Invalid input values');
+      return;
+    }
+    axios.put(`http://localhost:8080/salary/${user.username}`, formData)
+    .then((response => {
+        alert("salary updated succesfully!")
+    }))
+    .catch((error)=>window.alert("There was a problem in updating the salary!"));
   };
 
   const handleCalculateClick = () => {
-    // setError('');
-    // if (!basicsalary || !allowance) {
-    //   setError('Please fill all fields');
-    //   return;
-    // }
 
     const salaryValue = parseFloat(basicsalary);
     const allowanceValue = parseFloat(allowance);
-
-    // if (
-    //   isNaN(salaryValue) ||
-    //   salaryValue <= 0 ||
-    //   isNaN(allowanceValue) ||
-    //   allowanceValue <= 0 
-    // ) {
-    //   setError('Invalid input values');
-    //   return;
-    // }
-    //console.log(user);
-    
     const calculatedTax = (salaryValue + allowanceValue)* 15 / 100;
     setTax(calculatedTax);
     
@@ -121,18 +123,18 @@ console.log(salarydetail);
         />
       </div>
 <div className='flex-wrap mb-4'>
-      <button
+      {!salarydetail.basicsalary&&<button
         onClick={handleAddSalary}
-        className="w-auto mr-2 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
+        className="w-auto mr-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
       >
         Add Salary Details
-      </button>
-      <button
+      </button>}
+      {salarydetail.basicsalary&&<button
         onClick={handleUpdateSalary}
-        className="w-auto m-2 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
+        className="w-auto  bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
       >
         Update Salary Details
-      </button>
+      </button>}
       </div>
       <button
         onClick={handleCalculateClick}
