@@ -4,12 +4,12 @@ const EmpTaxCalculator = () => {
   const [basicsalary, setBasicSalary] = useState('');
   const [allowance, setAllowance] = useState('');
   const [tax, setTax] = useState(null);
+  const [taxableIncome, setTaxableIncome] = useState('');
   const [error, setError] = useState('');
+  const [istoggled,setIstoggled]=useState(false);
   const [salarydetail,setSalarydetail]=useState({});
-  const formData={
-    basicsalary:basicsalary,
-    allowance:allowance
-  };
+  
+  
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -17,43 +17,50 @@ const EmpTaxCalculator = () => {
   const handleTaxRateChange = (e) => setAllowance(e.target.value);
 
   useEffect(() => {
-    console.log(user.username);
+    // console.log(user.username);
     axios.get(`http://localhost:8080/salary/${user.username}`)
     .then((res) => {
        const salaryda=res.data
-       if(salaryda){
+       if(salaryda && Object.keys(salaryda).length > 0  ){
        setSalarydetail(salaryda);
        setBasicSalary(salaryda.basicsalary);
        setAllowance(salaryda.allowance);
+       setTaxableIncome(salaryda.taxableIncome);
+      //  console.log(salarydetail);
        }
     })
     .catch((error)=>window.alert("There was a problem in access salary details!"));
-  }, []);
+  }, [istoggled]);
 
- console.log(salarydetail);
+ //console.log(salarydetail);
 
   const handleAddSalary=()=>{
     setError('');
+
 
     if (!basicsalary || !allowance) {
       setError('Please fill all fields');
       return;
     }
-    if (
-      isNaN(basicsalary) ||
-      basicsalary<= 0 ||
-      isNaN(allowance) ||
-      allowance <= 0 
-    ) {
+    if (isNaN(basicsalary) ||basicsalary<= 0 ||isNaN(allowance) ||allowance <= 0 ) {
       setError('Invalid input values');
       return;
     }
+
+    const formData={
+      basicsalary:basicsalary,
+      allowance:allowance
+    };
+
     axios.post(`http://localhost:8080/salary/${user.username}`, formData)
     .then((response => {
         alert("salary added succesfully!")
+        setIstoggled(!istoggled);
     }))
     .catch((error)=>window.alert("There was a problem in add the salary!"));
 
+
+    
   };
 
 
@@ -64,28 +71,46 @@ const EmpTaxCalculator = () => {
       setError('Please fill all fields');
       return;
     }
-    if (
-      isNaN(basicsalary) ||
-      basicsalary<= 0 ||
-      isNaN(allowance) ||
-      allowance <= 0 
-    ) {
+    if (isNaN(basicsalary) ||basicsalary<= 0 ||isNaN(allowance) ||allowance <= 0 ) {
       setError('Invalid input values');
       return;
     }
+
+    const formData={
+      basicsalary:basicsalary,
+      allowance:allowance
+    };
+
     axios.put(`http://localhost:8080/salary/${user.username}`, formData)
     .then((response => {
         alert("salary updated succesfully!")
+        setIstoggled(!istoggled);
     }))
     .catch((error)=>window.alert("There was a problem in updating the salary!"));
   };
 
-  const handleCalculateClick = () => {
 
+  const handleDisplay=()=>{
     const salaryValue = parseFloat(basicsalary);
     const allowanceValue = parseFloat(allowance);
     const calculatedTax = (salaryValue + allowanceValue)* 15 / 100;
     setTax(calculatedTax);
+  }
+
+  const handleCalculateClick = () => {
+
+    const taxData={
+      taxableIncome:taxableIncome,
+    }
+    
+    axios.post(`http://localhost:8080/tax/${user.username}`, taxData)
+    .then((response => {
+        // alert("")
+        handleDisplay();
+
+    }))
+    .catch((error)=>window.alert("There was a problem in add the tax!"));
+
     
   };
 
@@ -145,7 +170,7 @@ const EmpTaxCalculator = () => {
 
       {tax !== null && (
         <p className="mt-4 text-green-500 font-medium">
-          Tax to be paid: ${tax.toFixed(2)}
+          Tax to be paid: ₹{tax.toFixed(2)}
         </p>
       )}
     </div>
